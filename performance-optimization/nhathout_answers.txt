@@ -1,0 +1,29 @@
+-------------------------------------------------------------------
+Profiling Results
+-------------------------------------------------------------------
+
+qsort_large spends 84.32% of its time executing the function compare based on the flat profile.
+
+
+-------------------------------------------------------------------
+Optimization
+-------------------------------------------------------------------
+
++-----------------------+--------------------+--------------------+
+|Optimizations          |Time on eng-grid    |Time on BeagleBone  |
++-----------------------+--------------------+--------------------+
+|Default                | 0m0.066s           | 0m0.57s            |
++-----------------------+--------------------+--------------------+
+|myOptimization1        | 0m0.057s           | 0m0.53s            |
++-----------------------+--------------------+--------------------+
+|myOptimization2        | 0m0.059s           | 0m0.47s            |
++-----------------------+--------------------+--------------------+
+|Optional 1 & 2 combined| 0m0.048s           | 0m0.45s            |
++-----------------------+--------------------+--------------------+
+
+myOptimization1: Added -O3 flag during compilation with no code changes.
+According to gcc.gnu.org: "Optimize yet more" flag. 
+
+myOptimization2: Not using pow() and sqrt() to calculate distance in qsort. I just noticed the use of the time expensive functions and tried to find another way to calculate distance using basic arithmetic (square distance).
+
+Difference btw grid and embedded: The BeagleBone exhibited longer runtimes on average and, more specifically, is around 10x slower. This is due to the ARM architecture of the BeagleBone, how we cross compiled, and the smaller processing power compared to eng-grid.
